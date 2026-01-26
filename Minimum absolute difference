@@ -1,0 +1,67 @@
+class Solution {
+    public List<List<Integer>> minimumAbsDifference(int[] nums) {
+        // First, sort the array using quick sort
+        quickSort(nums, 0, nums.length - 1);
+
+        // Initialize the minimum absolute difference to a large value
+        int minAbsDiff = Integer.MAX_VALUE;
+
+        // Iterate through the sorted array to find the minimum absolute difference
+        for (int i = 1; i < nums.length; i++) {
+            if (minAbsDiff > Math.abs(nums[i] - nums[i - 1])) {
+                minAbsDiff = Math.abs(nums[i] - nums[i - 1]);
+            }
+        }
+
+        // Create a result list to store the pairs with minimum absolute difference
+        List<List<Integer>> result = new ArrayList<>();
+
+        // Iterate through the sorted array again to find the pairs with minimum absolute difference
+        for (int i = 1; i < nums.length; i++) {
+            if (minAbsDiff == Math.abs(nums[i] - nums[i - 1])) {
+                List<Integer> list = new ArrayList<>();
+                list.add(nums[i - 1]);
+                list.add(nums[i]);
+                result.add(list);
+            }
+        }
+
+        return result;
+    }
+
+    public void quickSort(int[] nums, int left, int right) {
+        // Base case: if the subarray has only one element, return
+        if (right <= left) {
+            return;
+        }
+
+        // Select a pivot element
+        int start = left;
+        int end = right;
+        int mid = start + (end - start) / 2;
+        int pivot = nums[mid];
+
+        // Partition the array around the pivot element
+        while (start <= end) {
+            while (nums[start] < pivot) {
+                start++;
+            }
+
+            while (nums[end] > pivot) {
+                end--;
+            }
+
+            if (start <= end) {
+                int temp = nums[start];
+                nums[start] = nums[end];
+                nums[end] = temp;
+                start++;
+                end--;
+            }
+        }
+
+        // Recursively sort the subarrays
+        quickSort(nums, left, end);
+        quickSort(nums, start, right);
+    }
+}
