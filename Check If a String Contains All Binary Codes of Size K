@@ -1,0 +1,33 @@
+class Solution {
+public:
+    bool hasAllCodes(string s, int k) 
+    {
+        int n = s.size();
+        // If total possible codes (2^k) is more than possible substrings
+        if (n < (1 << k)) return false;
+
+        int total = 1 << k;             // total binary codes of length k
+        vector<bool> seen(total, false);// track seen codes
+        int mask = total - 1;           // bitmask to keep k bits
+        int cur = 0;                    // current rolling value
+        int count = 0;                  // how many unique codes seen
+
+        for (int i = 0; i < n; i++) 
+        {
+            // rolling hash: add new bit and keep last k bits
+            cur = ((cur << 1) & mask) | (s[i] - '0');
+
+            // once we've read k characters (i >= k-1), mark code
+            if (i >= k - 1) 
+            {
+                if (!seen[cur]) 
+                {
+                    seen[cur] = true;
+                    count++;
+                    if (count == total) return true; 
+                }
+            }
+        }
+        return count == total;
+    }
+};
